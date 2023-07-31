@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>profile/{{user_profile.user.username}}</title>
+    <style>
+        /* Add your CSS styling here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .profile-container {
+            display: flex;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .profile-left {
+            flex: 1;
+            padding-right: 20px;
+            text-align: center;
+        }
+        .profile-left img {
+            max-width: 200px;
+            border-radius: 90%;
+        }
+        .profile-right {
+            flex: 1;
+            text-align: center;
+        }
+        .profile-right .info {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .profile-right .info div {
+            text-align: center;
+        }
+        .follow-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .follow-link:hover {
+            background-color: #45a049;
+        }
+
+        {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .post-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 20px;
+        }
+        .post-column {
+            display: grid;
+            grid-template-rows: repeat(4, 1fr);
+            grid-gap: 10px;
+        }
+        .post-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }adius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-left">
+            <img src="{{user_profile.profile_image.url}}" alt="Profile Picture">
+            <h2>{{user_profile.user.username}}</h2>
+            <lable>Bio </lable>
+            <p>{{user_profile.bio}}</p>
+            <form method="post" action="{% url 'follow' %}">
+                {% csrf_token %}
+                <input type="hidden" name="follower" value="{{user.username}}"> 
+                <input type="hidden" name="user" value="{{user_object.username}}">
+                {% if user_object.username == user.username %}
+                <a href="{% url 'settings' %}" <button   class="follow-link"> account settings</button> </a>
+                {% else %}
+                    <button type="submit"  class="follow-link">{{button_text}}</button>
+                {% endif %}
+               
+            </form> 
+            {% comment %} <a href="{% url 'follow'  %}" class="follow-link">Follow</a> {% endcomment %}
+        </div>
+        <div class="profile-right">
+            <div class="info">
+                <div>
+                    <strong>Followers</strong>
+                    <p>{{user_folowers}}</p>
+                </div>
+                <div>
+                    <strong>Followings</strong>
+                    <p>{{user_following}}</p>
+                </div>
+                <div>
+                    {% if user_posts_length == 0 %}
+                    <strong>No Posts</strong>
+                    {% else %}
+                    <strong>Total Posts</strong>
+                    <p>{{user_posts_length}}</p>
+
+                    {% endif %}
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+<br>
+
+
+
+    <div class="post-container">
+        <div class="post-column">
+            <div class="post-image">
+                {% for post  in user_posts %}
+                
+
+                <a href="{{post.post_image.url}}" class="">
+                    <img src="{{post.post_image.url}}" alt="Post Image 1"  width="400"  height="400">
+                </a>
+                <p> {{post.caption}}</p>
+                {% if post.no_of_likes > 1 %}
+                <p> Likes {{post.no_of_likes}}</p>
+                {% else %}
+                <p> Like {{post.no_of_likes}}</p>
+                {% comment %} <a href="{% url 'delete-post' post.post_uuid %}" > </a> {% endcomment %}
+               <a href="/delete-post/{{post.post_uuid }}"  class="logout"> Delete Post</a></span> 
+
+                {% endif %}
+                 
+                {% endfor %}
+                
+            </div>
+            
+        </div>
+        
+    </div>
+
+
+
+
+</body>
+</html>
